@@ -3,6 +3,7 @@ package com.vaja.screen;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.vaja.main.Vaja;
@@ -27,7 +28,7 @@ public class AbstractScreen implements Screen {
 		cam = new OrthographicCamera(Vaja.V_WIDTH, Vaja.V_HEIGHT);
 		cam.setToOrtho(false);
 		
-		viewPort = new FitViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, new OrthographicCamera());
+		viewPort = new ExtendViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, cam);
 		
 		this.stage = new Stage(this.viewPort, game.batch);
 	}
