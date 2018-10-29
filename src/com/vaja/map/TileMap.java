@@ -68,8 +68,9 @@ public class TileMap {
 				Tile t = new Tile(index, new Vector2(x, y));
 				this.tileMap[k] = t;
 				
-				int rows = index / rm.tiles16x16[0].length;
-				int column = index % rm.tiles16x16[0].length;
+				int rows = Math.abs(index) / rm.tiles16x16[0].length;
+				int column = Math.abs(index) % rm.tiles16x16[0].length;
+				;
 				
 				this.spriteMap[k] = rm.tiles16x16[rows][column];
 			}

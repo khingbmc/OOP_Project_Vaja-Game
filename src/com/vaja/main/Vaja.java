@@ -15,7 +15,7 @@ public class Vaja extends Game {
 	//Screen Dimensions
 	public static final int V_WIDTH = 160;
 	public static final int V_HEIGHT = V_WIDTH / 12 *9;
-	public static final int V_SCALE = 5;
+	public static final int V_SCALE = 6;
 	
 	//batch
 	public SpriteBatch batch;
