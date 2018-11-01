@@ -1,5 +1,6 @@
 package com.vaja.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.vaja.entity.Entity;
 
@@ -27,8 +28,12 @@ public class Tile {
 	//Entity is each tile has contains
 	public Entity contain;
 	
-	public Tile(int id, Vector2 tilePosition) {
+	//sprite
+	public TextureRegion sprite;
+	
+	public Tile(int id, TextureRegion sprite,Vector2 tilePosition) {
 		this.id = id;
+		this.sprite = sprite;
 		this.tilePosition = tilePosition;
 		
 		//default tile has no entity
@@ -50,6 +55,6 @@ public class Tile {
 	}
 	
 	public boolean isExtra() {
-		return this.type == 0 ? false : true;
+		return this.type == 0;
 	}
 }

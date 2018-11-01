@@ -18,7 +18,7 @@ public class DesktopLauncher {
 		
 		config.width = Vaja.V_WIDTH*Vaja.V_SCALE;
 		config.height = Vaja.V_HEIGHT*Vaja.V_SCALE;
-		config.resizable = false;
+		config.resizable = true;
 		config.vSyncEnabled = false;
 		config.title = Vaja.TITLE;
 		

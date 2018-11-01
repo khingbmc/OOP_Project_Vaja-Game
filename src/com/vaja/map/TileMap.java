@@ -16,8 +16,7 @@ public class TileMap {
 	public String mapInfo;
 	public String[] mapInfoLines;
 	
-	//1d sprite map
-	public TextureRegion[] spriteMap;
+	
 	
 	//array is contain map information
 	public Tile[] tileMap;
@@ -43,7 +42,7 @@ public class TileMap {
 		this.mapHeight = Integer.parseInt(this.mapInfoLines[1]);
 		this.mapWidth= Integer.parseInt(this.mapInfoLines[0]);
 		
-		this.spriteMap = new TextureRegion[this.mapWidth * this.mapHeight];
+		
 		this.tileMap = new Tile[this.mapWidth * this.mapHeight];
 		
 		
@@ -65,14 +64,14 @@ public class TileMap {
 				
 				int k = (this.mapWidth * this.mapHeight -1) - ((i-2)*this.mapWidth+j);
 				
-				Tile t = new Tile(index, new Vector2(x, y));
-				this.tileMap[k] = t;
+				
 				
 				int rows = Math.abs(index) / rm.tiles16x16[0].length;
 				int column = Math.abs(index) % rm.tiles16x16[0].length;
 				;
 				
-				this.spriteMap[k] = rm.tiles16x16[rows][column];
+				Tile t = new Tile(index, rm.tiles16x16[rows][column], new Vector2(x, y));
+				this.tileMap[k] = t;
 			}
 		}
 	}
@@ -82,11 +81,11 @@ public class TileMap {
 	 */
 	
 	public void render(SpriteBatch batch) {
-		for (int i= 0;i < this.spriteMap.length;i++) {
+		for (int i= 0;i < this.tileMap.length;i++) {
 			int row = i / this.mapWidth;
 			int column = i % this.mapWidth;
 			
-			batch.draw(spriteMap[i], this.origin.x + column *this.tileSize, 
+			batch.draw(this.tileMap[i].sprite, this.origin.x + column *this.tileSize, 
 					this.origin.y+ row * this.tileSize);
 			
 		}
@@ -98,6 +97,10 @@ public class TileMap {
 	
 	public Tile getTile(int tileX, int tileY) {
 		return tileMap[tileX * mapWidth + tileY];
+	}
+	
+	public Tile getTile(Vector2 coordinate) {
+		return this.tileMap[(int) (coordinate.x*this.mapWidth + coordinate.y)];
 	}
 	
 	//check tilemap is contain tile?
@@ -114,5 +117,41 @@ public class TileMap {
 			if(this.tileMap[i].id == id) return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * replace tile by id
+	 */
+	
+	public void setTile(int tileX, int tileY, int id) {
+		int row = id/rm.tiles16x16[0].length;
+		int column = id%rm.tiles16x16.length;
+		this.tileMap[tileX * this.mapWidth + tileY] = new Tile(id, rm.tiles16x16[row][column], new Vector2(tileX, tileY));
+		
+		
+	}
+	
+	/**
+	 * convert tile to map coordinate
+	 */
+	
+	public Vector2 toCoor(int tileX, int tileY) {
+		return new Vector2(tileX*this.tileSize, tileY*this.tileSize);
+	}
+	
+	public Vector2 toCoor(Vector2 coordinate) {
+		return new Vector2(coordinate.x*this.tileSize, coordinate.y*this.tileSize);
+	}
+	
+	/**
+	 * convert map coordinate to tile
+	 */
+	
+	public Vector2 toTile(int mapX, int mapY) {
+		return new Vector2(mapX/this.tileSize, mapY/this.tileSize);
+	}
+	
+	public Vector2 toTile(Vector2 coordinate) {
+		return new Vector2(coordinate.x/this.tileSize, coordinate.y/this.tileSize);
 	}
 }

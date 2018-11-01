@@ -72,7 +72,9 @@ public class AnimationManage {
 		
 		//convert animation frame row in sprite to 2d array
 		for(int i = 0;i<sprites[index].length/4;i++) {
+			System.out.println(sprites[index].toString());
 			for(int j=0;j<this.animationFrame[0].length;j++) {
+				
 				this.animationFrame[i][j] = sprites[index][(j%4) + (i*4)];
 			}
 		}

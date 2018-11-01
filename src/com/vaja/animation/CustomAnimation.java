@@ -49,7 +49,8 @@ public class CustomAnimation extends Animation{
 	}
 	
 	public TextureRegion getKeyFrame(boolean looping) {
-		return getKeyFrame(this.stateTime, looping);
+		System.out.println(this.stateTime);
+		return super.getKeyFrame(this.stateTime, looping);
 	}
 	
 	public TextureRegion getKeyFrame() {

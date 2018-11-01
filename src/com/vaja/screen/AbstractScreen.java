@@ -1,11 +1,13 @@
 package com.vaja.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.vaja.input.InputManage;
 import com.vaja.main.Vaja;
 import com.vaja.resource.ResourceManage;
 
@@ -13,6 +15,7 @@ public class AbstractScreen implements Screen {
 
 	protected Vaja game;
 	protected ResourceManage rm;
+	protected InputManage im;
 	
 	//camera use to focus screen
 	protected OrthographicCamera cam;
@@ -27,6 +30,9 @@ public class AbstractScreen implements Screen {
 		
 		cam = new OrthographicCamera(Vaja.V_WIDTH, Vaja.V_HEIGHT);
 		cam.setToOrtho(false);
+		
+		im = new InputManage(cam);
+		Gdx.input.setInputProcessor(im);
 		
 		viewPort = new ExtendViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, cam);
 		

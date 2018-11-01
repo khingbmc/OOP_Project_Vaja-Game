@@ -14,6 +14,8 @@ public class Entity {
 	//animation
 	protected AnimationManage am;
 	
+	protected Vector2 position;
+	
 	/**
 	 * 0 = up 
 	 * 1 = down 
@@ -21,24 +23,15 @@ public class Entity {
 	 * 3 = right
 	 */
 	
-	protected int dir;
 	
-	//position x, y in tile
-	protected Vector2 position;
-	
-	//the target position
-	protected Vector2 target;
-	
-	/**
-	 * 0 = idle
-	 * 1 = up
-	 * 2 = down
-	 * 3 = right
-	 * 4 = left
-	 */
-	protected int movement;
-	protected boolean moving;
+	protected boolean[] moving;
 	protected float speed;
+	//Entity current tile
+	protected int currentTileX;
+	protected int currentTileY;
+	//the number of tile in direction move
+	protected int numberOfTile;
+	
 	
 	//remove Enitity
 	
@@ -48,124 +41,165 @@ public class Entity {
 	//map
 	protected TileMap tileMap;
 	
-	public Entity(Vector2 position, TileMap tileMap, ResourceManage rm) {
+	public Entity(String id,Vector2 position, TileMap tileMap, ResourceManage rm) {
 		this.position = position;
+		this.id = id;
 		this.tileMap = tileMap;
 		this.rm = rm;
 		
 		this.shouldDestroy = this.destroyed = false;
 		
+		
+		moving = new boolean[4];
+		for (int i =0 ;i<moving.length;i++) moving[i] = false;
+		
+		
 	}
 	
 	public void update(float delta) {
 		if(!this.destroyed) {
-			move();
+			
+			//movement
+			handle();
+			//animation
 			am.update(delta);
 		}
 	}
 	
 	/**
-	 * this input is process one of 4 direction
-	 * @param movement
+	 * move to target position with number of tile in direction
+	 * @param direction
 	 */
-	public void setMovement(int movement) {
-		if(this.moving) return;
-		this.movement = movement;
-		this.moving = canMove();
+	public void move(int direction, int numberOfTile) {
+		this.currentTileX = (int) (position.x / this.tileMap.tileSize);
+		this.currentTileY = (int) (position.y / this.tileMap.tileSize);
+		this.numberOfTile = numberOfTile;
+		
+		this.moving[direction] = true; //this is attribute is check player to move in one of direction
 	}
 	
 	public void render(SpriteBatch batch, boolean looping) {
 		if(!destroyed) {
-			batch.draw(this.am.getKeyFrame(looping),
-					this.position.x *this.tileMap.tileSize - this.am.width / 2,
-					this.position.y * this.tileMap.tileSize - this.am.height / 2);
+			batch.draw(am.getKeyFrame(looping), position.x + 1, position.y);
 		}
 	}
 	
-	//check entity is able to move dest position
+	/**
+	 * check if 4 direction in array boolen movement is all false 
+	 * @return 
+	 */
 	
 	public boolean canMove() {
-		if(this.moving) return true;
-		
-		//if player want to move in position out of map or extra tile: moving = 0
-		switch(this.movement) {
-		//up
-		case 1:
-			if(this.position.y + 1 == this.tileMap.mapHeight || this.tileMap.getTile((int) this.position.x ,(int) this.position.y +1).type == Tile.EXTRA)
-			return false;
-			else this.target.y -= 1;
-			break;
-		//down
-		case 2:
-			if(this.position.y - 1 ==  -1 || this.tileMap.getTile((int) this.position.x, (int) this.position.y -1).type == Tile.EXTRA) return false;
-			else
-				this.target.y -=1 ;
-			break;
-		
-		//right
-		case 3:
-			if(this.position.x+1 == this.tileMap.mapWidth || this.tileMap.getTile((int) this.position.x + 1, (int) this.position.y).type == Tile.EXTRA) return false;
-			else
-				this.target.x += 1;
-			break;
-		
-		//left
-		case 4:
-			if(this.position.x -1 == -1 || this.tileMap.getTile((int) this.position.x -1, (int) this.position.y).type == Tile.EXTRA) return false;
-			else
-				this.target.x -= 1;
-			break;
-		
-			
-		}
+		for(boolean i : moving) if (i) return false;
 		return true;
 	}
 	
 	/**
 	 * this method is move entity from current position to target position
 	 */
-	public void move() {
-		if(this.position.x == this.target.x && this.position.y == this.target.y) this.movement = 0;
-		
-		//up
-		if(this.movement == 1 && this.position.y < this.target.y) this.position.y +=this.speed;
-		else this.movement = 0;
-		if(this.movement == 1 && this.position.y > this.target.y) this.position.y = this.target.y;
-		
-		//down
-		if(this.movement == 2 && this.position.y > this.target.y) this.position.y -= this.speed;
-		else this.movement = 0;
-		if(this.movement == 2 && this.position.y < this.target.y) this.position.y = this.target.y;
-		
-		//right
-		if(this.movement == 3 && this.position.x < this.target.x) this.position.x += this.speed;
-		else this.movement = 0;
-		if(this.movement == 3 && this.position.x > this.target.x) this.position.x = this.target.x;
-		
-		//left
-		if(this.movement == 4 && this.position.x > this.target.x) this.position.x -= this.speed;
-		else this.movement = 0;
-		if(this.movement == 4 && this.position.x < this.target.x) this.position.x = this.target.x;
-		
+	public int adjust(int direction) {
+		switch(direction) {
+			case 0://up
+				for(int i = this.currentTileY;i <= this.currentTileY+this.numberOfTile;i++) {
+					if(tileMap.getTile(currentTileX, i).isExtra() || i == tileMap.mapHeight) {
+						if(i == currentTileY +1) return currentTileY;
+						else return i-1;
+					}
+				}
+				return currentTileY + this.numberOfTile;
+			
+			case 1://down
+				for(int i = this.currentTileY;i >= this.currentTileY-this.numberOfTile;i--) {
+					if(tileMap.getTile(currentTileX, i).isExtra() || i < 0) {
+						if(i == currentTileY - 1) return currentTileY;
+						else return i + 1;
+					}
+				}
+				return currentTileY - this.numberOfTile;
+				
+			case 2://right
+				for(int i = this.currentTileX;i<=this.currentTileX+this.numberOfTile;i++) {
+					if(tileMap.getTile(i, currentTileY).isExtra() ||i>=tileMap.mapWidth-1) {
+						if(i == currentTileX +1) return currentTileX;
+						else return i - 1;
+					}
+				}
+				return currentTileX - this.numberOfTile;
+			case 3://left
+				for(int i = this.currentTileX;i >= this.currentTileX - this.numberOfTile;i--) {
+					if(tileMap.getTile(i, currentTileY).isExtra() || i == 0) {
+						if (i == currentTileX - 1) return currentTileX;
+                        else return i + 1;
+					}
+				}
+				return currentTileX + this.numberOfTile;
+		}
+		return 0;
 		
 	}
 	
-	
-	public void setDir(int dir) {
-		this.dir = dir;
+	public void handle() {
+		//handle up
+		if(this.moving[0]) {
+			int targetY = this.adjust(0);
+			if(targetY == this.currentTileY) {
+				this.moving[0] = false;
+			}else {
+				position.y += this.speed;
+				 if (position.y >= targetY * tileMap.tileSize) {
+	                    position.y = targetY * tileMap.tileSize;
+	                    moving[0] = false;
+	                }
+			}
+		}
+		//handle dpwn
+		else if(this.moving[1]) {
+			int targetY = this.adjust(1);
+			if(targetY == this.currentTileY) {
+				this.moving[1] = false;
+			}else {
+				position.y -= this.speed;
+				 if (position.y <= targetY * tileMap.tileSize) {
+	                    position.y = targetY * tileMap.tileSize;
+	                    moving[0] = false;
+	                }
+			}
+		}
+		//handle right
+		else if(this.moving[2]) {
+			int targetX = this.adjust(2);
+			if(targetX == this.currentTileX) {
+				this.moving[2] = false;
+			}else {
+				position.y += this.speed;
+				 if (position.x >= targetX * tileMap.tileSize) {
+	                    position.x = targetX * tileMap.tileSize;
+	                    moving[2] = false;
+	                }
+			}
+		}
+		//handle left
+		else if(this.moving[3]) {
+			int targetX = this.adjust(3);
+			if(targetX == this.currentTileX) {
+				this.moving[3] = false;
+			}else {
+				position.y -= this.speed;
+					if (position.x <= targetX * tileMap.tileSize) {
+			             position.x = targetX * tileMap.tileSize;
+			             moving[3] = false;
+			                }
+					}
+				}
 	}
+	
+	
 	
 	public void setPosition(Vector2 position) {
 		this.position = position;
 	}
 	
-	public void setTarget(Vector2 target) {
-		this.target = target;
-	}
 	
-	public void setMoving(boolean moving) {
-		this.moving = moving;
-	}
 
 	public boolean isShouldDestroy() {
 		return shouldDestroy;
@@ -179,17 +213,34 @@ public class Entity {
 		return id;
 	}
 
-	public int getDir() {
-		return dir;
-	}
-
-	public Vector2 getTarget() {
-		return target;
+	
+	public ResourceManage getRm() {
+		return rm;
 	}
 	
-	public boolean getMoving() {
-		return moving;
+	public boolean isMoving(int direction) {
+		return this.moving[direction];
 	}
+
+	public AnimationManage getAm() {
+		return am;
+	}
+
+	public Vector2 getPosition(){
+		return position;
+	}
+
+
+
+	public float getSpeed() {
+		return speed;
+	}
+
+	public TileMap getTileMap() {
+		return tileMap;
+	}
+
+	
 	
 	public boolean isDestroyed() {
 		return this.destroyed;

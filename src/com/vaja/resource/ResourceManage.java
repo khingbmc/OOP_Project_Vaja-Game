@@ -17,7 +17,7 @@ public class ResourceManage {
 	private AssetManager asset;
 
 	//2d texture arrays has contain sprite
-	public TextureRegion[][] sprites16x16;
+	public TextureRegion[][] sprites;
 	public TextureRegion[][] tiles16x16;
 	
 	
@@ -25,10 +25,13 @@ public class ResourceManage {
 		asset = new AssetManager();
 		
 		asset.load("res/map/test_map.png", Texture.class);
+		asset.load("res/character/test1.png", Texture.class);
 		asset.finishLoading();
 		
 		this.tiles16x16 = TextureRegion.split(asset.get("res/map/test_map.png", Texture.class), 16, 16);
 		
+		
+		this.sprites =  TextureRegion.split(asset.get("res/character/test1.png", Texture.class), 16, 16);
 	}
 	
 	public void dispose() {
