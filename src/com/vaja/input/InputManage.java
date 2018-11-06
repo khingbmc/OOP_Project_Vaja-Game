@@ -82,7 +82,7 @@ public class InputManage implements InputProcessor{
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if (button != Input.Buttons.LEFT || pointer > 0) return false;
-		this.cam.unproject(this.input.set(screenX, screenY, 0)); //Vector3 3 direction
+		this.input.set(screenX, screenY, 0);
 		this.drag = true;
 		
 		return true;
@@ -119,7 +119,7 @@ public class InputManage implements InputProcessor{
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		//desktop
-		this.cam.unproject((this.input.set(screenX, screenY, 0)));
+		this.input.set(screenX, screenY, 0);
 		return true;
 	}
 
@@ -127,7 +127,7 @@ public class InputManage implements InputProcessor{
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if (button != Input.Buttons.LEFT || pointer > 0) return false;
-		this.cam.unproject(this.input.set(screenX, screenY, 0));
+		this.input.set(screenX, screenY, 0);
 		this.drag = false;
 		return true;
 	}

@@ -15,9 +15,8 @@ public class AbstractScreen implements Screen {
 
 	protected Vaja game;
 	protected ResourceManage rm;
-	protected InputManage im;
 	
-	//camera use to focus screen
+	//camera use to focus player
 	protected OrthographicCamera cam;
 	//viewpost is aspect to ratio of screen if user resizing screen
 	protected Viewport viewPort;
@@ -30,9 +29,6 @@ public class AbstractScreen implements Screen {
 		
 		cam = new OrthographicCamera(Vaja.V_WIDTH, Vaja.V_HEIGHT);
 		cam.setToOrtho(false);
-		
-		im = new InputManage(cam);
-		Gdx.input.setInputProcessor(im);
 		
 		viewPort = new ExtendViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, cam);
 		

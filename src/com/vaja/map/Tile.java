@@ -55,6 +55,6 @@ public class Tile {
 	}
 	
 	public boolean isExtra() {
-		return this.type == 0;
+		return this.type == 1;
 	}
 }

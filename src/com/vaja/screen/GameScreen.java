@@ -9,6 +9,7 @@ import com.vaja.entity.Player;
 import com.vaja.main.Vaja;
 import com.vaja.map.TileMap;
 import com.vaja.resource.ResourceManage;
+import com.vaja.scene.Hud;
 
 /**
  * this method is handle gameplay of user
@@ -20,6 +21,7 @@ public class GameScreen extends AbstractScreen {
 	
 	private TileMap test;
 	private Player player;
+	private Hud hud;
 	
 	
 	
@@ -27,13 +29,14 @@ public class GameScreen extends AbstractScreen {
 		super(game, rm);
 		
 		test = new TileMap(16, "res/map/test_map.txt", new Vector2(0, 0), rm);
-		player = new Player("p1", new Vector2(2, 2), this.test, rm, im);
+		player = new Player("player", test.toCoor(7, 7), test, rm);	
+		hud = new Hud(player, game.batch, rm);
 	}
 	
 	public void update(float delta) {
 		//camera follow player
-		cam.position.x = this.player.getPosition().x*this.test.tileSize;
-		cam.position.y = this.player.getPosition().y * this.test.tileSize;
+		cam.position.x = player.getPosition().x + 8;
+		cam.position.y = player.getPosition().y + 4;
 		this.player.update(delta);
 		cam.update();
 	}
@@ -51,6 +54,14 @@ public class GameScreen extends AbstractScreen {
 		this.player.render(game.batch);
 		
 		game.batch.end();
+		
+		hud.stage.act(delta);
+		hud.stage.draw();
+	}
+	
+	public void dispose() {
+		super.dispose();
+		hud.dispose();
 	}
 	
 	
