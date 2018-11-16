@@ -55,7 +55,7 @@ public class Tile {
 		//magOffset can either be -1 or 1
 		if(isChange()){
 			int r = rand.nextInt(2);
-			System.out.println(r);
+
 			if(r == 0) this.mag = 1;
 			if(r == 1) this.mag = -1;
 		}
@@ -81,3 +81,4 @@ public class Tile {
 		return this.mag;
 	}
 }
+

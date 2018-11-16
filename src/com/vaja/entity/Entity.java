@@ -7,6 +7,8 @@ import com.vaja.map.Tile;
 import com.vaja.map.TileMap;
 import com.vaja.resource.ResourceManage;
 
+import java.util.Random;
+
 public class Entity {
 	protected String id;
 	protected ResourceManage rm;
@@ -15,6 +17,8 @@ public class Entity {
 	protected AnimationManage am;
 	
 	protected Vector2 position;
+
+	protected Random rand;
 	
 	/**
 	 * 0 = up 
@@ -37,6 +41,18 @@ public class Entity {
 	
 	protected boolean shouldDestroy;
 	protected boolean destroyed;
+
+	//Rpg aspect
+	protected int hp;
+	protected int maxHp;
+	// 0 - 100 in %
+	protected int minDmg;
+	protected int maxDmg;
+
+	//level inf
+	protected int level;
+	protected int exp;
+	protected int maxExp;
 	
 	//map
 	protected TileMap tileMap;
@@ -46,6 +62,8 @@ public class Entity {
 		this.id = id;
 		this.tileMap = tileMap;
 		this.rm = rm;
+
+		rand = new Random();
 		
 		this.shouldDestroy = this.destroyed = false;
 		
@@ -61,6 +79,14 @@ public class Entity {
 			
 			//movement
 			handle();
+			//handle elements of RPG
+			if(this.hp > this.maxHp) this.hp = this.maxHp;
+			if(this.hp <= 0){
+				this.hp = 0;
+				//entity die die die
+				shouldDestroy = true;
+			}
+
 			//animation
 			am.update(delta);
 		}
@@ -291,3 +317,4 @@ public class Entity {
 	
 	
 }
+
