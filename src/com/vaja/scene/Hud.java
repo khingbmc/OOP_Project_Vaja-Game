@@ -151,7 +151,7 @@ public class Hud implements Disposable , KeyListener{
 		this.magnitudeLabel = new Label[4];
 		
 		BitmapFont bitmapFont = rm.asset.get("arial.ttf", BitmapFont.class);
-		Label.LabelStyle font = new Label.LabelStyle(bitmapFont, new Color(255, 0 ,124, 255));
+		Label.LabelStyle font = new Label.LabelStyle(bitmapFont, new Color(0, 0 ,255, 255));
 		
 		for(int i = 0;i < 4;i++) {
 			this.magnitudeLabel[i] = new Label(String.valueOf(this.magnitude[i]), font);

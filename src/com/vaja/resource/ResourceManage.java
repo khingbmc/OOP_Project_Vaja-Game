@@ -6,9 +6,6 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 
 /**
  * this class is use to loading store and manage all of resource is use in all class
@@ -34,18 +31,18 @@ public class ResourceManage {
 		asset.load("res/character/test1.png", Texture.class);
 		asset.load("res/dir2.png", Texture.class);
 		
-//		FileHandleResolver resolver = new InternalFileHandleResolver();
+		FileHandleResolver resolver = new InternalFileHandleResolver();
 //		asset.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 //		asset.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-//		
-//		
+//
+//
 //		FreetypeFontLoader.FreeTypeFontLoaderParameter font = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
 //		font.fontFileName = "res/font/arial.ttf";
-//		font.fontParameters.size = 16;
+//		font.fontParameters.size = 10;
 //		font.fontParameters.magFilter = Texture.TextureFilter.Nearest;
 //		font.fontParameters.minFilter = Texture.TextureFilter.Nearest;
-//		asset.load("res/font/arial.ttf", BitmapFont.class, font);
-//		
+//		asset.load("arial.ttf", BitmapFont.class, font);
+
 		asset.finishLoading();
 		
 		this.tiles16x16 = TextureRegion.split(asset.get("res/map/test_map.png", Texture.class), 16, 16);

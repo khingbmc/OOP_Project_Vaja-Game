@@ -74,6 +74,7 @@ public class Entity {
 		this.currentTileX = (int) (position.x / this.tileMap.tileSize);
 		this.currentTileY = (int) (position.y / this.tileMap.tileSize);
 		this.numberOfTile = numberOfTile;
+		this.numberOfTile += adjustFor(direction);
 		
 		this.moving[direction] = true; //this is attribute is check player to move in one of direction
 	}
@@ -101,16 +102,18 @@ public class Entity {
 		switch(direction) {
 			case 0://up
 				for(int i = this.currentTileY;i <= this.currentTileY+this.numberOfTile;i++) {
-					if(tileMap.getTile(currentTileX, i).isExtra() || i == tileMap.mapHeight) {
-						if(i == currentTileY +1) return currentTileY;
-						else return i-1;
+					if(tileMap.getTile(currentTileX, i).isExtra() || i >= tileMap.mapHeight - 1) {
+						if(i == currentTileY + 1){
+							return currentTileY;
+						}
+						return i - 1;
 					}
 				}
 				return currentTileY + this.numberOfTile;
 			
 			case 1://down
 				for(int i = this.currentTileY;i >= this.currentTileY-this.numberOfTile;i--) {
-					if(tileMap.getTile(currentTileX, i).isExtra() || i < 0) {
+					if(tileMap.getTile(currentTileX, i).isExtra() || i <= 0) {
 						if(i == currentTileY - 1) return currentTileY;
 						else return i + 1;
 					}
@@ -124,15 +127,15 @@ public class Entity {
 						else return i - 1;
 					}
 				}
-				return currentTileX - this.numberOfTile;
+				return currentTileX + this.numberOfTile;
 			case 3://left
 				for(int i = this.currentTileX;i >= this.currentTileX - this.numberOfTile;i--) {
-					if(tileMap.getTile(i, currentTileY).isExtra() || i == 0) {
+					if(tileMap.getTile(i, currentTileY).isExtra() || i <= 0) {
 						if (i == currentTileX - 1) return currentTileX;
                         else return i + 1;
 					}
 				}
-				return currentTileX + this.numberOfTile;
+				return currentTileX - this.numberOfTile;
 		}
 		return 0;
 		
@@ -191,6 +194,45 @@ public class Entity {
 			                }
 					}
 				}
+	}
+
+	public int adjustFor(int dir){
+		switch(dir){
+			case 0://up
+				for(int i=currentTileY;i<= currentTileY + this.numberOfTile;i++){
+					if(i < tileMap.mapHeight - 1){
+						if(tileMap.getTile(currentTileX, i).isChange())
+							return tileMap.getTile(currentTileX, i).getMag();
+					}
+				}
+				return 0;
+
+			case 1://down
+				for (int i =currentTileY;i >= currentTileY - this.numberOfTile;i--){
+					if(i > 0){
+						if(tileMap.getTile(currentTileX, i).isChange())
+							return tileMap.getTile(currentTileX, i).getMag();
+					}
+				}
+				return 0;
+			case 2://right
+				for(int i = currentTileX;i <= currentTileX + this.numberOfTile;i++){
+					if(i < tileMap.mapWidth - 1){
+						if(tileMap.getTile(i, currentTileY).isChange())
+							return tileMap.getTile(i, currentTileY).getMag();
+					}
+				}
+				return 0;
+			case 3://left
+				for(int i = currentTileX;i >= currentTileX - this.numberOfTile;i--){
+					if(i > 0){
+						if( tileMap.getTile(i, currentTileY).isChange())
+							return tileMap.getTile(i, currentTileY).getMag();
+					}
+				}
+				return 0;
+		}
+		return 0;
 	}
 	
 	

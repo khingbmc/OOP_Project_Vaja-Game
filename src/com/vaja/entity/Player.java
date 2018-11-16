@@ -21,6 +21,7 @@ public class Player extends Entity{
 	
 	public void update(float delta) {
 		super.update(delta);
+		if(canMove()) am.stopAnimation();
 		
 		
 	}

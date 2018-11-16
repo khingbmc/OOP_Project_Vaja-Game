@@ -4,9 +4,11 @@ package com.vaja.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.vaja.resource.ResourceManage;
+
+import java.util.Random;
+import java.util.Vector;
 
 public class TileMap {
 	//tile
@@ -21,8 +23,11 @@ public class TileMap {
 	//array is contain map information
 	public Tile[] tileMap;
 	public int mapWidth, mapHeight;
+	public boolean[] collisionMap;
 	
 	public Vector2 origin;
+
+	private Random rand;
 	
 	//resource
 	private ResourceManage rm;
@@ -31,6 +36,8 @@ public class TileMap {
 		this.tileSize = tileSize;
 		this.origin = og;
 		this.rm = rm;
+
+		rand = new Random();
 		
 		//read file
 		FileHandle file = Gdx.files.internal(path);
@@ -47,6 +54,10 @@ public class TileMap {
 		
 		
 		convert();
+		this.collisionMap = new boolean[mapWidth*mapHeight];
+		for(int i = 0;i < collisionMap.length;i++){
+			this.collisionMap[i] = tileMap[i].isExtra();
+		}
 		
 	}
 	/**
@@ -68,9 +79,9 @@ public class TileMap {
 				
 				int rows = Math.abs(index) / rm.tiles16x16[0].length;
 				int column = Math.abs(index) % rm.tiles16x16[0].length;
-				;
+
 				
-				Tile t = new Tile(index, rm.tiles16x16[rows][column], new Vector2(x, y));
+				Tile t = new Tile(index, rm.tiles16x16[rows][column], new Vector2(x, y), rand);
 				this.tileMap[k] = t;
 			}
 		}
@@ -92,11 +103,13 @@ public class TileMap {
 	}
 	
 	public void setTile(int tileX, int tileY, Tile tile) {
+
 		this.tileMap[tileX * this.mapWidth + tileY] = tile;
 	}
 	
 	public Tile getTile(int tileX, int tileY) {
-		return tileMap[tileX * mapWidth + tileY];
+
+		return tileMap[tileY * mapWidth + tileX];
 	}
 	
 	public Tile getTile(Vector2 coordinate) {
@@ -126,8 +139,7 @@ public class TileMap {
 	public void setTile(int tileX, int tileY, int id) {
 		int row = id/rm.tiles16x16[0].length;
 		int column = id%rm.tiles16x16.length;
-		this.tileMap[tileX * this.mapWidth + tileY] = new Tile(id, rm.tiles16x16[row][column], new Vector2(tileX, tileY));
-		
+		this.tileMap[tileX * mapWidth + tileY] = new Tile(id, rm.tiles16x16[row][column], new Vector2(tileX, tileY), rand);
 		
 	}
 	

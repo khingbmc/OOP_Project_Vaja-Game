@@ -8,10 +8,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/gdx-backend-lwjgl-natives.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-backend-lwjgl.jar"/>
-	<classpathentry kind="lib" path="lib/gdx-natives.jar"/>
 	<classpathentry kind="lib" path="lib/gdx.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-tools.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-1.9.7.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-freetype-1.9.7.jar"/>
+	<classpathentry kind="lib" path="lib/gdx-natives.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

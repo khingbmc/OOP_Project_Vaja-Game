@@ -2,8 +2,6 @@ package com.vaja.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.vaja.entity.Player;
 import com.vaja.main.Vaja;
@@ -29,7 +27,7 @@ public class GameScreen extends AbstractScreen {
 		super(game, rm);
 		
 		test = new TileMap(16, "res/map/test_map.txt", new Vector2(0, 0), rm);
-		player = new Player("player", test.toCoor(7, 7), test, rm);	
+		player = new Player("player", test.toCoor(5, 8), test, rm);
 		hud = new Hud(player, game.batch, rm);
 	}
 	
