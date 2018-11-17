@@ -49,7 +49,7 @@ public class ResourceManage {
 		
 		
 		this.sprites =  TextureRegion.split(asset.get("res/character/test1.png", Texture.class), 16, 16);
-		this.dir20x20 = TextureRegion.split(asset.get("res/dir2.png", Texture.class), 20, 20);
+		this.dir20x20 = TextureRegion.split(asset.get("res/dir2.png", Texture.class), 40, 40);
 	}
 	
 	public void dispose() {

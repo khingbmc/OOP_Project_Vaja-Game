@@ -16,7 +16,7 @@ public class Util {
 	
 	//dir pad position
 	
-	public static final int DIR_SIZE = 20;
-	public static final int DIR_OFFSET = 5;
+	public static final int DIR_SIZE = 40;
+	public static final int DIR_OFFSET = 10;
 	
 }

@@ -62,8 +62,8 @@ public class Hud implements Disposable , KeyListener{
 		this.rm = rm;
 		
 		this.rand = new Random();
-		
-		viewport = new ExtendViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, new OrthographicCamera());
+		//need more pixel in HUD
+		viewport = new ExtendViewport(Vaja.V_WIDTH*2, Vaja.V_HEIGHT*2, new OrthographicCamera());
 		stage = new Stage(viewport, batch);
 		
 		Gdx.input.setInputProcessor(stage);
