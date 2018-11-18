@@ -1,6 +1,7 @@
 package com.vaja.input;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -74,7 +75,7 @@ public class InputManage implements InputProcessor{
 	
 	
 	@Override
-	public boolean scrolled(int arg0) {
+	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -91,26 +92,26 @@ public class InputManage implements InputProcessor{
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		if(!this.drag) return false;
-		this.cam.unproject(this.input.set(screenX, screenY, 0));
+		this.input.set(screenX, screenY, 0);
 		return true;
 	}
 
 	@Override
-	public boolean keyDown(int arg0) {
+	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
-	public boolean keyTyped(char arg0) {
+	public boolean keyTyped(char character) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
-	public boolean keyUp(int arg0) {
+	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -67,8 +67,13 @@ public class Tile {
 		//is not entity in tile
 	}
 	
+	
+	public Entity getEntity() {
+		return this.contain;
+	}
+	
 	public boolean containEntity() {
-		return this.contain == null;
+		return this.contain != null;
 	}
 	
 	public boolean isExtra() {
@@ -80,5 +85,11 @@ public class Tile {
 	public int getMag(){
 		return this.mag;
 	}
+
+
+	
+
+
+	
 }
 

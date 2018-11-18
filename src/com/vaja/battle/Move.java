@@ -51,20 +51,38 @@ public class Move {
     	this.description = description;
     	
     	this.minDmg = this.maxDmg = dmg;
+    	this.minHeal = this.maxHeal = -1;
     	this.crit = crit;
     }
     
     //calculate the true dmg for entity range
-    public void setDmg(int minSeed, int maxSeed) {
-    	this.minDmg = (this.minDmg * (minSeed / 12))+minSeed;
-    	this.maxDmg = (this.maxDmg * (minSeed / 12))+maxSeed;
+    public void setDmg(int damageSeed) {
+    	if(this.type == 3) return;
+    	
+    	//for accurate it is normal attack it has deviate little from avg
+    	if(this.type == 0) {
+    		this.minDmg = damageSeed - (this.minDmg * (damageSeed / 24));
+    		this.maxDmg = damageSeed - (this.maxDmg * (damageSeed / 24));
+    	}
+    	
+    	//for wide it has over area attack it has large diviate from avg
+    	else if(this.type == 1) {
+    		this.minDmg = damageSeed - (this.minDmg * (damageSeed / 12));
+    		this.maxDmg = damageSeed - (this.minDmg * (damageSeed / 12));
+    	}
+    	
+    	//for crit
+    	else if(this.type == 2) {
+    		this.minDmg = this.maxDmg = damageSeed - (damageSeed / this.minDmg);
+    	}
     }
     
-    //heal is 1/4 of entity max hp
+    //heal is of entity max hp
     
     public void setHeal(int hpSeed) {
-    	this.minHeal += hpSeed/4;
-    	this.maxHeal += hpSeed/4;
+    	if(this.type != 3) return;
+    	this.minHeal = (hpSeed / 16)*this.minHeal;
+    	this.maxHeal = (hpSeed/16) * this.maxHeal;
     }
 
 }

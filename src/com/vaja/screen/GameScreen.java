@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.vaja.entity.Player;
+import com.vaja.entity.infomons.Slimeboy;
 import com.vaja.main.Vaja;
 import com.vaja.map.TileMap;
 import com.vaja.resource.ResourceManage;
@@ -29,6 +30,8 @@ public class GameScreen extends AbstractScreen {
 		test = new TileMap(16, "res/map/test_map.txt", new Vector2(0, 0), rm);
 		player = new Player("player", test.toCoor(5, 8), test, rm);
 		hud = new Hud(player, game.batch, rm);
+		
+		test.getTile(4, 4).addEntity(new Slimeboy("slime boy", test.toCoor(4, 4), test, rm));
 	}
 	
 	public void update(float delta) {
@@ -36,7 +39,11 @@ public class GameScreen extends AbstractScreen {
 		cam.position.x = player.getPosition().x + 8;
 		cam.position.y = player.getPosition().y + 4;
 		this.player.update(delta);
+		
+		this.player.update(delta);
+		test.update(delta);
 		cam.update();
+		
 	}
 	
 	public void render(float delta) {

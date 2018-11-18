@@ -1,0 +1,5 @@
+{"accurate":[{"type":0, "name":"tackle", "description":"Monster Tackle you ughhh!!!", "minDamage":5, "maxDamage":20}, 
+    {"type":0, "name":"kick", "description":"Monster Kick You!!!", "minDamage":10, "maxDamage":20}],
+"wide":[{"type":1, "name":"earthquake", "description":"EarthQiake!!!", "minDamage":10, "maxDamage":30}],
+"critical":[{"name":"tackle", "description":"Monster Tackle you Critical", "damage":20, "critical":5}],
+"healing":[{"type":3, "name":"Holy Light", "description":"Heal!!!", "minHeal":15, "maxHeal":30}]}

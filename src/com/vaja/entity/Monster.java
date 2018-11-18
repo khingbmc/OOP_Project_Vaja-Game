@@ -19,5 +19,17 @@ public class Monster extends Entity {
 
     public Monster(String id, Vector2 position, TileMap tileMap, ResourceManage rm) {
         super(id, position, tileMap, rm);
+        
+        speed = 0;
     }
+
+	public int getExpDrop() {
+		return expDrop;
+	}
+
+	public int getCoinDrop() {
+		return coinDrop;
+	}
+    
+    
 }

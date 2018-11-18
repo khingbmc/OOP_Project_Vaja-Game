@@ -3,6 +3,7 @@ package com.vaja.entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.vaja.animation.AnimationManage;
+import com.vaja.battle.Moveset;
 import com.vaja.map.Tile;
 import com.vaja.map.TileMap;
 import com.vaja.resource.ResourceManage;
@@ -15,6 +16,8 @@ public class Entity {
 	
 	//animation
 	protected AnimationManage am;
+	//battle scene animation
+	protected AnimationManage bam;
 	
 	protected Vector2 position;
 
@@ -46,6 +49,8 @@ public class Entity {
 	protected int hp;
 	protected int maxHp;
 	// 0 - 100 in %
+	protected int accuracy;
+	
 	protected int minDmg;
 	protected int maxDmg;
 
@@ -54,8 +59,13 @@ public class Entity {
 	protected int exp;
 	protected int maxExp;
 	
+	//rpg aspect
+	protected Moveset moveset;
+	
 	//map
 	protected TileMap tileMap;
+	
+	
 	
 	public Entity(String id,Vector2 position, TileMap tileMap, ResourceManage rm) {
 		this.position = position;
@@ -65,11 +75,11 @@ public class Entity {
 
 		rand = new Random();
 		
-		this.shouldDestroy = this.destroyed = false;
+		
 		
 		
 		moving = new boolean[4];
-		for (int i =0 ;i<moving.length;i++) moving[i] = false;
+		for (int i =0 ;i<4;i++) moving[i] = false;
 		
 		
 	}
@@ -107,7 +117,7 @@ public class Entity {
 	
 	public void render(SpriteBatch batch, boolean looping) {
 		if(!destroyed) {
-			batch.draw(am.getKeyFrame(looping), position.x + 1, position.y);
+			batch.draw(am.getKeyFrame(looping), position.x, position.y);
 		}
 	}
 	
@@ -132,7 +142,10 @@ public class Entity {
 						if(i == currentTileY + 1){
 							return currentTileY;
 						}
-						return i - 1;
+						else return i - 1;
+					}
+					if(tileMap.getTile(this.currentTileX, i).containEntity()){
+						return i;
 					}
 				}
 				return currentTileY + this.numberOfTile;
@@ -143,6 +156,9 @@ public class Entity {
 						if(i == currentTileY - 1) return currentTileY;
 						else return i + 1;
 					}
+					if(tileMap.getTile(this.currentTileX, i).containEntity()){
+						return i;
+					}
 				}
 				return currentTileY - this.numberOfTile;
 				
@@ -152,6 +168,9 @@ public class Entity {
 						if(i == currentTileX +1) return currentTileX;
 						else return i - 1;
 					}
+					if(tileMap.getTile(i, this.currentTileY).containEntity()){
+						return i;
+					}
 				}
 				return currentTileX + this.numberOfTile;
 			case 3://left
@@ -160,6 +179,10 @@ public class Entity {
 						if (i == currentTileX - 1) return currentTileX;
                         else return i + 1;
 					}
+					if(tileMap.getTile(i, this.currentTileY).containEntity()){
+						return i;
+					}
+					
 				}
 				return currentTileX - this.numberOfTile;
 		}
@@ -170,7 +193,7 @@ public class Entity {
 	public void handle() {
 		//handle up
 		if(this.moving[0]) {
-			int targetY = this.adjust(0);
+			int targetY = adjust(0);
 			if(targetY == this.currentTileY) {
 				this.moving[0] = false;
 			}else {
@@ -183,7 +206,7 @@ public class Entity {
 		}
 		//handle dpwn
 		else if(this.moving[1]) {
-			int targetY = this.adjust(1);
+			int targetY = adjust(1);
 			if(targetY == this.currentTileY) {
 				this.moving[1] = false;
 			}else {
@@ -196,11 +219,11 @@ public class Entity {
 		}
 		//handle right
 		else if(this.moving[2]) {
-			int targetX = this.adjust(2);
+			int targetX = adjust(2);
 			if(targetX == this.currentTileX) {
 				this.moving[2] = false;
 			}else {
-				position.y += this.speed;
+				position.x += this.speed;
 				 if (position.x >= targetX * tileMap.tileSize) {
 	                    position.x = targetX * tileMap.tileSize;
 	                    moving[2] = false;
@@ -209,11 +232,11 @@ public class Entity {
 		}
 		//handle left
 		else if(this.moving[3]) {
-			int targetX = this.adjust(3);
+			int targetX = adjust(3);
 			if(targetX == this.currentTileX) {
 				this.moving[3] = false;
 			}else {
-				position.y -= this.speed;
+				position.x -= this.speed;
 					if (position.x <= targetX * tileMap.tileSize) {
 			             position.x = targetX * tileMap.tileSize;
 			             moving[3] = false;

@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AnimationManage {
 	public static final int UP = 0;
 	public static final int DOWN = 1;
-	public static final int LEFT = 2;
-	public static final int RIGHT = 3;
+	public static final int RIGHT = 2;
+	public static final int LEFT = 3;
 	
 	public float width;
 	public float height;
@@ -40,7 +40,7 @@ public class AnimationManage {
 	 * sprite
 	 */
 	
-	public AnimationManage(TextureRegion[][] sprites,int numAnimation ,int numFrame, int index, float delay) {
+	public AnimationManage(TextureRegion[][] sprites,int numAnimation , int index,int numFrame, float delay) {
 		animations = new CustomAnimation[numAnimation];
 		animationFrame = new TextureRegion[numAnimation][numFrame];
 		
@@ -50,7 +50,7 @@ public class AnimationManage {
 		//convert animation frame row in sprite to 2d array
 		for(int i = 0;i < sprites[index].length / numAnimation; i++) {
 			for(int j=0;j<this.animationFrame[0].length;j++) {
-				this.animationFrame[i][j] = sprites[index][(j % numAnimation) + (i % numAnimation)];
+				this.animationFrame[i][j] = sprites[index][(j % numAnimation) + (i * numAnimation)];
 			}
 		}
 		for(int i=0;i < this.animations.length; i++) {
@@ -72,7 +72,7 @@ public class AnimationManage {
 		
 		//convert animation frame row in sprite to 2d array
 		for(int i = 0;i<sprites[index].length/4;i++) {
-			System.out.println(sprites[index].toString());
+//			System.out.println(sprites[index].toString());
 			for(int j=0;j<this.animationFrame[0].length;j++) {
 				
 				this.animationFrame[i][j] = sprites[index][(j%4) + (i*4)];

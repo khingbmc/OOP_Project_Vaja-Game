@@ -99,6 +99,19 @@ public class TileMap {
 			batch.draw(this.tileMap[i].sprite, this.origin.x + column *this.tileSize, 
 					this.origin.y+ row * this.tileSize);
 			
+			//draw entity on tile
+			if(this.tileMap[i].containEntity()) {
+				this.tileMap[i].getEntity().render(batch, true);
+			}
+			
+		}
+	}
+	
+	public void update(float delta) {
+		for(int i = 0;i < this.tileMap.length;i++) {
+			if(this.tileMap[i].containEntity()) {
+				this.tileMap[i].getEntity().update(delta);
+			}
 		}
 	}
 	
@@ -113,6 +126,7 @@ public class TileMap {
 	}
 	
 	public Tile getTile(Vector2 coordinate) {
+		System.out.println(this.tileMap);
 		return this.tileMap[(int) (coordinate.x*this.mapWidth + coordinate.y)];
 	}
 	
