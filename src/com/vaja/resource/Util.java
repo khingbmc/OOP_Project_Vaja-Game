@@ -8,15 +8,15 @@ package com.vaja.resource;
  */
 public class Util {
 
-	//index animation
-	public static final int WALKING = 0;
-	
-	//delay
-	public static final float WALKING_DELAY = 1/6f;
-	
-	//dir pad position
-	
-	public static final int DIR_SIZE = 40;
-	public static final int DIR_OFFSET = 10;
-	
+    // Animation indexes
+    public static final int PLAYER_WALKING = 0;
+
+    // Animation delays
+    public static final float PLAYER_WALKING_DELAY = 1 / 6f;
+
+    // Directional pad button positions
+    public static final int DIR_PAD_SIZE = 40;
+    public static final int DIR_PAD_OFFSET = 10;
+
 }
+

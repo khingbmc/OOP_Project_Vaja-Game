@@ -21,108 +21,103 @@ import com.vaja.battle.Move;
  */
 
 public class ResourceManage {
-	
-	
-	//asset manage
-	public AssetManager asset;
 
-	//2d texture arrays has contain sprite
-	public TextureRegion[][] sprites16x16;
-	public TextureRegion[][] tiles16x16;
-	public TextureRegion[][] dir20x20;
-	public TextureRegion[][] movebutt110x40;
-	
-	//Array is contain each type of moveset
-	public Array<Move> accurateMove = new Array<Move>();
-	public Array<Move> wideMove = new Array<Move>();
-	public Array<Move> critMove = new Array<Move>();
-	public Array<Move> healMove = new Array<Move>();
-	
-	public ResourceManage() {
-		asset = new AssetManager();
-		
-		asset.load("res/map/test_map.png", Texture.class);
-		asset.load("res/character/test1.png", Texture.class);
-		asset.load("res/button.png", Texture.class);
-		
-		
-		FileHandleResolver resolver = new InternalFileHandleResolver();
-//		asset.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-//		asset.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-//
-//
-//		FreetypeFontLoader.FreeTypeFontLoaderParameter font = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-//		font.fontFileName = "res/font/arial.ttf";
-//		font.fontParameters.size = 10;
-//		font.fontParameters.magFilter = Texture.TextureFilter.Nearest;
-//		font.fontParameters.minFilter = Texture.TextureFilter.Nearest;
-//		asset.load("arial.ttf", BitmapFont.class, font);
-		
-		loadMoveset();
+    public AssetManager assetManager;
 
-		asset.finishLoading();
-		
-		this.tiles16x16 = TextureRegion.split(asset.get("res/map/test_map.png", Texture.class), 16, 16);
-		
-		
-		this.sprites16x16 =  TextureRegion.split(asset.get("res/character/test1.png", Texture.class), 16, 16);
-		this.movebutt110x40 = TextureRegion.split(asset.get("res/button.png", Texture.class), 110, 40);
-	}
-	
-	/**
-	 * load img button style with effect button up and down
-	 */
-	
-	public ImageButton.ImageButtonStyle[] loadImageStyles(int numButtons, TextureRegion[][] sprites){
-		ImageButton.ImageButtonStyle[] ret = new ImageButton.ImageButtonStyle[numButtons];
-		for(int i = 0;i < numButtons;i++) {
-			ret[i] = new ImageButton.ImageButtonStyle();
-			ret[i].imageUp = new TextureRegionDrawable(sprites[0][i]);
-			ret[i].imageDown = new TextureRegionDrawable(sprites[1][i]);
-		}
-		return ret;
-	}
-	
-	public void dispose() {
-		asset.dispose();
-	}
-	
-	private void loadMoveset() {
-		//parsing moveset.json
-		JsonReader json = new JsonReader();
-		JsonValue baseVal = json.parse(Gdx.files.internal("res/moveset.json"));
-		
-		//accurate
-		for(JsonValue move : baseVal.get("accurate")) {
-			Move m = new Move(move.getInt("type"), move.getString("name")
-					,move.getString("description"), move.getInt("minDamage")
-					, move.getInt("maxDamage"));
-			this.accurateMove.add(m);
-		}
-		
-		//wide
-		for(JsonValue move : baseVal.get("wide")) {
-			Move m = new Move(move.getInt("type"), move.getString("name")
-							,move.getString("description"), move.getInt("minDamage")
-							, move.getInt("maxDamage"));
-			this.wideMove.add(m);
-		}
-		
-		//critical
-		for(JsonValue move : baseVal.get("critical")) {
-			Move m = new Move(move.getString("name"),move.getString("description"), 
-					move.getInt("damage"), move.getInt("critical"));
-			this.critMove.add(m);
-		}
-		
-		//healing
-		for(JsonValue move : baseVal.get("healing")) {
-			Move m = new Move(move.getInt("type"), move.getString("name")
-							,move.getString("description"), move.getInt("minHeal")
-							, move.getInt("maxHeal"));
-			this.healMove.add(m);
-		}
-	}
+    // 2D TextureRegion arrays that stores sprites of various sizes for easy animation
+    public TextureRegion[][] sprites16x16;
+    public TextureRegion[][] tiles16x16;
+    public TextureRegion[][] dirpad20x20;
+    public TextureRegion[][] movebutton110x40;
+
+    // Arrays for each type of Move
+    // Contains the entire pool of moves for each type
+    public Array<Move> accurateMoves = new Array<Move>();
+    public Array<Move> wideMoves = new Array<Move>();
+    public Array<Move> critMoves = new Array<Move>();
+    public Array<Move> healMoves = new Array<Move>();
+
+    public ResourceManage() {
+        assetManager = new AssetManager();
+
+        assetManager.load("res/character/test1.png", Texture.class);
+        assetManager.load("res/map/test_map.png", Texture.class);
+        assetManager.load("res/button.png", Texture.class);
+        
+
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+//        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+//        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+//
+//        FreetypeFontLoader.FreeTypeFontLoaderParameter font = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+//        font.fontFileName = "arial.ttf";
+//        font.fontParameters.size = 10;
+//        font.fontParameters.minFilter = Texture.TextureFilter.Nearest;
+//        font.fontParameters.magFilter = Texture.TextureFilter.Nearest;
+//        assetManager.load("arial.ttf", BitmapFont.class, font);
+
+        loadMoves();
+
+        assetManager.finishLoading();
+
+        sprites16x16 = TextureRegion.split(
+                assetManager.get("res/character/test1.png", Texture.class), 16, 16);
+        tiles16x16 = TextureRegion.split(
+                assetManager.get("res/map/test_map.png", Texture.class), 16, 16);
+        dirpad20x20 = TextureRegion.split(assetManager.get("res/button.png", Texture.class), 40, 40);
+    }
+
+    /**
+     * Loads the ImageButton styles for buttons with up and down image effects
+     *
+     * @param numButtons
+     * @param sprites
+     * @return a style array for ImageButtons
+     */
+    public ImageButton.ImageButtonStyle[] loadImageButtonStyles(int numButtons, TextureRegion[][] sprites) {
+        ImageButton.ImageButtonStyle[] ret = new ImageButton.ImageButtonStyle[numButtons];
+        for (int i = 0; i < numButtons; i++) {
+            ret[i] = new ImageButton.ImageButtonStyle();
+            ret[i].imageUp = new TextureRegionDrawable(sprites[0][i]);
+            ret[i].imageDown = new TextureRegionDrawable(sprites[1][i]);
+        }
+        return ret;
+    }
+
+    private void loadMoves() {
+        // parse moves.json
+        JsonReader jsonReader = new JsonReader();
+        JsonValue base = jsonReader.parse(Gdx.files.internal("res/moveset.json"));
+
+        // accurate Moves
+        for (JsonValue move : base.get("accurate")) {
+            Move m = new Move(move.getInt("type"), move.getString("name"),
+                    move.getString("description"), move.getInt("minDamage"), move.getInt("maxDamage"));
+            accurateMoves.add(m);
+        }
+        // wide Moves
+        for (JsonValue move : base.get("wide")) {
+            Move m = new Move(move.getInt("type"), move.getString("name"),
+                    move.getString("description"), move.getInt("minDamage"), move.getInt("maxDamage"));
+            wideMoves.add(m);
+        }
+        // crit Moves
+        for (JsonValue move : base.get("critical")) {
+            Move m = new Move(move.getString("name"), move.getString("description"),
+                    move.getInt("damage"), move.getInt("critical"));
+            critMoves.add(m);
+        }
+        // heal Moves
+        for (JsonValue move : base.get("healing")) {
+            Move m = new Move(move.getInt("type"), move.getString("name"),
+                    move.getString("description"), move.getInt("minHeal"), move.getInt("maxHeal"));
+            healMoves.add(m);
+        }
+    }
+
+    public void dispose() {
+        assetManager.dispose();
+    }
 
 }
 

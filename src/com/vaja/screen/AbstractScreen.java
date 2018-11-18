@@ -13,77 +13,59 @@ import com.vaja.resource.ResourceManage;
 
 public class AbstractScreen implements Screen {
 
-	protected Vaja game;
-	protected ResourceManage rm;
-	
-	//camera use to focus player
-	protected OrthographicCamera cam;
-	//viewpost is aspect to ratio of screen if user resizing screen
-	protected Viewport viewPort;
-	//stage
-	protected Stage stage;
-	
-	public AbstractScreen(Vaja game, ResourceManage rm) {
-		this.game = game;
-		this.rm = rm;
-		
-		cam = new OrthographicCamera(Vaja.V_WIDTH, Vaja.V_HEIGHT);
-		cam.setToOrtho(false);
-		
-		viewPort = new ExtendViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, cam);
-		
-		this.stage = new Stage(this.viewPort, game.batch);
-	}
+    protected final Vaja game;
+    protected final ResourceManage rm;
 
-	@Override
-	public void dispose() {
-		stage.dispose();
-		
-	}
+    // camera that focuses on the player
+    protected OrthographicCamera cam;
+    // viewport that keeps aspect ratios of the game when resizing
+    protected Viewport viewport;
+    // main stage of each screen
+    protected Stage stage;
 
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+    public AbstractScreen(final Vaja game, final ResourceManage rm) {
+        this.game = game;
+        this.rm = rm;
 
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+        cam = new OrthographicCamera(Vaja.V_WIDTH, Vaja.V_HEIGHT);
+        cam.setToOrtho(false);
+        // the game will retain it's scaled dimensions regardless of resizing
+        viewport = new ExtendViewport(Vaja.V_WIDTH, Vaja.V_HEIGHT, cam);
 
-	@Override
-	public void render(float arg0) {
-		
-		
-	}
+        stage = new Stage(viewport, game.batch);
+    }
 
-	@Override
-	public void resize(int w, int h) {
-		this.viewPort.update(w, h);
-		
-	}
+    @Override
+    public void render(float dt) {}
 
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+    }
 
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void show() {}
 
-	public OrthographicCamera getCam() {
-		return cam;
-	}
+    @Override
+    public void pause() {}
 
-	public Stage getStage() {
-		return stage;
-	}
-	
+    @Override
+    public void resume() {}
+
+    @Override
+    public void hide() {}
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public OrthographicCamera getCamera() {
+        return cam;
+    }
 
 }

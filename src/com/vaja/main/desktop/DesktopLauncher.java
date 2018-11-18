@@ -11,20 +11,17 @@ import com.vaja.main.Vaja;
  */
 
 public class DesktopLauncher {
-	public static void main(String[] args) {
+
+	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		
-		//config game meta-data
-		
-		config.width = Vaja.V_WIDTH*Vaja.V_SCALE;
-		config.height = Vaja.V_HEIGHT*Vaja.V_SCALE;
-		config.resizable = true;
-		config.vSyncEnabled = false;
-		config.title = Vaja.TITLE;
-		
-		
-		new LwjglApplication(new Vaja() , config);
-	
-		
+
+        config.width = Vaja.V_WIDTH * Vaja.V_SCALE;
+        config.height = Vaja.V_HEIGHT * Vaja.V_SCALE;
+        config.resizable = true;
+        config.vSyncEnabled = false;
+        config.title = Vaja.TITLE;
+
+		new LwjglApplication(new Vaja(), config);
 	}
+
 }

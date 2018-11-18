@@ -6,83 +6,105 @@ package com.vaja.battle;
 
 public class Move {
 
+    // basic descriptors
     public String name;
     public String description;
-    
     /*
-     * 0 - accurate
-     * 1 - wide
-     * 2 - critical
-     * 3 - healing
+    0 - Accurate
+    1 - Wide
+    2 - Crit
+    3 - Healing
      */
     public int type;
 
-    //dmg range
-    public int minDmg, maxDmg;
+    // Damage range of a Move
+    public int minDamage;
+    public int maxDamage;
 
-    //healing move
-    public int minHeal, maxHeal;
-    
-    //critical chance
+    // Healing of a Move
+    public int minHeal;
+    public int maxHeal;
+
+    // Crit chance in %
     public int crit;
-    
-    //this constructor is not for critical type
 
-    public Move(int type, String name, String description, int minDmg, int maxDmg){
-        
-    	this.type = type;
-    	this.name = name;
+    /**
+     * Constructor for Accurate, Wide, and Healing types
+     *
+     * @param type
+     * @param name
+     * @param description
+     * @param min
+     * @param max
+     */
+    public Move(int type, String name, String description, int min, int max) {
+        this.type = type;
+        this.name = name;
         this.description = description;
-        
-        if(type == 0 || type == 1) {
-        	this.minDmg = minDmg;
-        	this.maxDmg = maxDmg;
-        }else {
-        	this.minHeal = minDmg;
-        	this.maxHeal = maxDmg;
-        	this.minDmg = this.maxDmg = this.crit = -1;
+
+        if (type == 0 || type == 1) {
+            this.minDamage = min;
+            this.maxDamage = min;
+            minHeal = maxHeal = crit = -1;
+        }
+        else {
+            this.minHeal = min;
+            this.maxHeal = max;
+            minDamage = maxDamage = crit = -1;
         }
     }
-    
-    //this constructor is for critical type
-    public Move(String name, String description, int dmg, int crit) {
-    	this.type = 2;
-    	this.name = name;
-    	this.description = description;
-    	
-    	this.minDmg = this.maxDmg = dmg;
-    	this.minHeal = this.maxHeal = -1;
-    	this.crit = crit;
+
+    /**
+     * Constructor for Crit type
+     *
+     * @param name
+     * @param description
+     * @param damage CANNOT BE 0 OR 1
+     * @param crit
+     */
+    public Move(String name, String description, int damage, int crit) {
+        type = 2;
+        this.name = name;
+        this.description = description;
+
+        minDamage = maxDamage = damage;
+        minHeal = maxHeal = -1;
+        this.crit = crit;
     }
-    
-    //calculate the true dmg for entity range
-    public void setDmg(int damageSeed) {
-    	if(this.type == 3) return;
-    	
-    	//for accurate it is normal attack it has deviate little from avg
-    	if(this.type == 0) {
-    		this.minDmg = damageSeed - (this.minDmg * (damageSeed / 24));
-    		this.maxDmg = damageSeed - (this.maxDmg * (damageSeed / 24));
-    	}
-    	
-    	//for wide it has over area attack it has large diviate from avg
-    	else if(this.type == 1) {
-    		this.minDmg = damageSeed - (this.minDmg * (damageSeed / 12));
-    		this.maxDmg = damageSeed - (this.minDmg * (damageSeed / 12));
-    	}
-    	
-    	//for crit
-    	else if(this.type == 2) {
-    		this.minDmg = this.maxDmg = damageSeed - (damageSeed / this.minDmg);
-    	}
+
+    /**
+     * Somewhat scaling formula for calculating the true damage range based on an Entity's range
+     *
+     * @param damageSeed is the "average" damage of an Entity calculated from its range
+     */
+    public void setDamage(int damageSeed) {
+        if (type == 3) return;
+
+        // For accurate damage, the min and max Move damage will deviate little from the mean
+        if (type == 0) {
+            minDamage = damageSeed - (minDamage * (damageSeed / 24));
+            maxDamage = damageSeed - (maxDamage * (damageSeed / 24));
+        }
+        // Wide damage has large deviation from the mean
+        else if (type == 1) {
+            minDamage = damageSeed - (minDamage * (damageSeed / 12));
+            maxDamage = damageSeed - (maxDamage * (damageSeed / 12));
+        }
+        // Crit damage has fixed damage that is less than the mean
+        else if (type == 2) {
+            minDamage = maxDamage = damageSeed - (damageSeed / minDamage);
+        }
     }
-    
-    //heal is of entity max hp
-    
+
+    /**
+     * Some strange formula for scaling hp
+     *
+     * @param hpSeed max hp of the Entity
+     */
     public void setHeal(int hpSeed) {
-    	if(this.type != 3) return;
-    	this.minHeal = (hpSeed / 16)*this.minHeal;
-    	this.maxHeal = (hpSeed/16) * this.maxHeal;
+        if (type != 3) return;
+        minHeal = (hpSeed / 16) * minHeal;
+        maxHeal = (hpSeed / 16) * maxHeal;
     }
 
 }

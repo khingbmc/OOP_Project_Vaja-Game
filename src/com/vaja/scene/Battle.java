@@ -19,25 +19,28 @@ import com.vaja.main.Vaja;;
  *
  */
 public class Battle {
-	private Random rand;
-	private ResourceManage rm;
-	private Player player;
-	private Monster monster;
-	
-	//scene 2d
-	public Stage stage;
-	private Viewport viewport;
-	
-	public Battle(Player player, Monster monster, SpriteBatch batch, ResourceManage rm) {
-		rand = new Random();
-		
-		this.player = player;
-		this.monster = monster;
-		this.rm = rm;
-		
-		this.viewport = new ExtendViewport(Vaja.V_WIDTH * 2, Vaja.V_HEIGHT * 2, new OrthographicCamera());
-		this.stage = new Stage(this.viewport, batch);
-		
-		Gdx.input.setInputProcessor(stage);
-	}
+
+    private Random rand;
+    private ResourceManage rm;
+    private Player player;
+    private Monster monster;
+
+    // Scene2D
+    public Stage stage;
+    private Viewport viewport;
+
+    public Battle(Player player, Monster enemy, SpriteBatch batch, ResourceManage rm) {
+        rand = new Random();
+
+        this.player = player;
+        this.monster = enemy;
+        this.rm = rm;
+
+        viewport = new ExtendViewport(Vaja.V_WIDTH * 2, Vaja.V_HEIGHT * 2, new OrthographicCamera());
+        stage = new Stage(viewport, batch);
+
+        Gdx.input.setInputProcessor(stage);
+    }
+
 }
+

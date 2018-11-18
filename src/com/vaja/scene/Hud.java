@@ -37,157 +37,139 @@ import com.vaja.resource.Util;
 
 public class Hud implements Disposable {
 
-	private Random rand;
-	private ResourceManage rm;
-	private Player player;
-	
-	//scene in 2d
-	public Stage stage;
-	private Viewport viewport;
-	/*
-	 * Button 
-	 * Direction(0-up, 1-down, 2-right, 3-left)
-	 * 
-	 */
-	
-	private ImageButton[] dirpad;
-	
-	//this attribute is random magnitude for each four direction
-	private int[] magnitude;
-	//label for magnitude
-	private Label[] magnitudeLabel;
-	
-	
-	public Hud(Player player,SpriteBatch batch, ResourceManage rm) {
-		this.player = player;
-		this.rm = rm;
-		
-		this.rand = new Random();
-		//need more pixel in HUD
-		viewport = new ExtendViewport(Vaja.V_WIDTH*2, Vaja.V_HEIGHT*2, new OrthographicCamera());
-		stage = new Stage(viewport, batch);
-		
-		Gdx.input.setInputProcessor(stage);
-		
-		this.magnitude = new int[4];
-		shuffleMag();
-		
-//		createDirPad();
-//		createMagLabel();
-	}
-	
-	/**
-	 * Set random magnitude for each direction
-	 */
-	
-	public void shuffleMag() {
-		for(int i =0;i<4;i++) {
-			//each magnitude is value between 1-4
-			this.magnitude[i] = rand.nextInt(4) + 1;
-		}
-	}
-	
-	//update number in pad after click down
-	
-	public void updateMag() {
-		for(int i = 0;i<4;i++) {
-			this.magnitudeLabel[i].setText(String.valueOf(this.magnitude[i]));
-		}
-	}
-	
-	/**
-	 * Draw directional pad and apply Drawable effect
-	 */
-	
-	private void createDirPad() {
-		this.dirpad = new ImageButton[4];
-		
-		//when press button it change for visible effect
-		ImageButton.ImageButtonStyle[] style = rm.loadImageStyles(4, rm.dir20x20);
-		
-		
-		//up
-		dirpad[0] = new ImageButton(style[0]);
-		this.dirpad[0].setPosition(Util.DIR_SIZE + Util.DIR_OFFSET, (Util.DIR_SIZE * 2) + Util.DIR_OFFSET);
-		
-		//down
-		dirpad[1] = new ImageButton(style[1]);
-		this.dirpad[1].setPosition(Util.DIR_SIZE + Util.DIR_OFFSET, Util.DIR_OFFSET);
-		
-		//right
-		dirpad[2] = new ImageButton(style[2]);
-		this.dirpad[2].setPosition((Util.DIR_SIZE * 2) + Util.DIR_OFFSET, Util.DIR_SIZE + Util.DIR_OFFSET);
-		
-		//left
-		dirpad[3] = new ImageButton(style[3]);
-		this.dirpad[3].setPosition(Util.DIR_SIZE + Util.DIR_OFFSET, Util.DIR_OFFSET);
-		
-		handleEvent();
-		
-		for (int i = 0; i < dirpad.length; i++) {
-            stage.addActor(dirpad[i]);
+    private Random rand;
+    private ResourceManage rm;
+    private Player player;
+
+    // Scene2D
+    public Stage stage;
+    private Viewport viewport;
+
+    // Buttons
+    // --------------------------------------------------------------------
+    // directional pad: index i 0 - down, 1 - up, 2 - right, 3 - left
+    private ImageButton[] dirPad;
+    // random magnitudes for each direction
+    private int[] mags;
+    // labels for magnitudes
+    private Label[] magLabels;
+
+    public Hud(Player player, SpriteBatch batch, ResourceManage rm) {
+        this.player = player;
+        this.rm = rm;
+        rand = new Random();
+
+        // the Hud needs more pixels to render text
+        viewport = new ExtendViewport(Vaja.V_WIDTH * 2, Vaja.V_HEIGHT * 2, new OrthographicCamera());
+        stage = new Stage(viewport, batch);
+
+        Gdx.input.setInputProcessor(stage);
+
+        mags = new int[4];
+        shuffleMagnitudes();
+
+        createDirPad();
+        createMagLabels();
+    }
+
+    /**
+     * Sets a random magnitude for each direction
+     */
+    private void shuffleMagnitudes() {
+        for (int i = 0; i < 4; i++) {
+            // each magnitude between 1 and 4
+            mags[i] = rand.nextInt(4) + 1;
         }
-	}
-	
-	
-	//draw label random magnitude in dirpad
-	
-	public void createMagLabel() {
-		this.magnitudeLabel = new Label[4];
-		
-		BitmapFont bitmapFont = rm.asset.get("arial.ttf", BitmapFont.class);
-		Label.LabelStyle font = new Label.LabelStyle(bitmapFont, new Color(0, 0 ,255, 255));
-		
-		for(int i = 0;i < 4;i++) {
-			this.magnitudeLabel[i] = new Label(String.valueOf(this.magnitude[i]), font);
-			this.magnitudeLabel[i].setSize(Util.DIR_SIZE, Util.DIR_SIZE);
-			this.magnitudeLabel[i].setAlignment(Align.center);
-			this.magnitudeLabel[i].setTouchable(Touchable.disabled);
-			
-		}
-		this.magnitudeLabel[0].setPosition(Util.DIR_SIZE + Util.DIR_OFFSET, (Util.DIR_SIZE * 2) + Util.DIR_OFFSET);
-		this.magnitudeLabel[1].setPosition(Util.DIR_SIZE + Util.DIR_OFFSET, Util.DIR_OFFSET);
-		this.magnitudeLabel[2].setPosition(Util.DIR_SIZE*2 + Util.DIR_OFFSET, (Util.DIR_SIZE ) + Util.DIR_OFFSET);
-		this.magnitudeLabel[3].setPosition(Util.DIR_SIZE, Util.DIR_OFFSET+ Util.DIR_OFFSET);
-		
-		for(int i=0;i<4;i++) {
-			stage.addActor(this.magnitudeLabel[i]);
-		}
-	}
-	
-	/**
-	 * HANDLE player movement cmd
-	 */
-	
-	public void handleEvent() {
-		for(int i = 0;i < 4;i++) {
-			final int index = i;
-			dirpad[i].addListener(new ClickListener() {
-				public void clicked(InputEvent event, float x, float y) {
-					movePlayer(index);
-				}
-			});
-		}
-	}
-	
-	private void movePlayer(int dir) {
-		if(player.canMove()) {
-			player.move(dir, this.magnitude[dir]);
-			player.getAm().setAnimation(dir);
-			this.shuffleMag();
-			this.updateMag();
-		}
-	}
-	
-	
-	
-	
-	@Override
-	public void dispose() {
-		this.stage.dispose();
-		
-	}
+    }
 
-	
+    /**
+     * Updates the DPAD numbers after a click
+     */
+    private void updateMagLabels() {
+        for (int i = 0; i < 4; i++) {
+            magLabels[i].setText(String.valueOf(mags[i]));
+        }
+    }
 
+    /**
+     * Draws the directional pad and applies Drawable effects
+     * Unfortunately have to do each one separately
+     */
+    private void createDirPad() {
+        dirPad = new ImageButton[4];
+
+        // when each button is pressed it changes for a more visible effect
+        ImageButton.ImageButtonStyle[] styles = rm.loadImageButtonStyles(4, rm.dirpad20x20);
+
+        // down
+        dirPad[0] = new ImageButton(styles[0]);
+        dirPad[0].setPosition(Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET, Util.DIR_PAD_OFFSET);
+        // up
+        dirPad[1] = new ImageButton(styles[1]);
+        dirPad[1].setPosition(Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET, (Util.DIR_PAD_SIZE * 2) + Util.DIR_PAD_OFFSET);
+        // right
+        dirPad[2] = new ImageButton(styles[2]);
+        dirPad[2].setPosition((Util.DIR_PAD_SIZE * 2) + Util.DIR_PAD_OFFSET, Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET);
+        // left
+        dirPad[3] = new ImageButton(styles[3]);
+        dirPad[3].setPosition(Util.DIR_PAD_OFFSET, Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET);
+
+        handleDirPadEvents();
+
+        for (int i = 0; i < dirPad.length; i++) {
+            stage.addActor(dirPad[i]);
+        }
+    }
+
+    /**
+     * Draws the labels representing the random magnitudes on the dPad
+     */
+    private void createMagLabels() {
+        magLabels = new Label[4];
+
+        BitmapFont bitmapFont = rm.assetManager.get("arial.ttf", BitmapFont.class);
+        Label.LabelStyle font = new Label.LabelStyle(bitmapFont, new Color(0, 0, 255, 255));
+
+        for (int i = 0; i < 4; i++) {
+            magLabels[i] = new Label(String.valueOf(mags[i]), font);
+            magLabels[i].setSize(Util.DIR_PAD_SIZE, Util.DIR_PAD_SIZE);
+            magLabels[i].setAlignment(Align.center);
+            magLabels[i].setTouchable(Touchable.disabled);
+        }
+        magLabels[0].setPosition(Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET, Util.DIR_PAD_OFFSET);
+        magLabels[1].setPosition(Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET, (Util.DIR_PAD_SIZE * 2) + Util.DIR_PAD_OFFSET);
+        magLabels[2].setPosition((Util.DIR_PAD_SIZE * 2) + Util.DIR_PAD_OFFSET, Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET);
+        magLabels[3].setPosition(Util.DIR_PAD_OFFSET, Util.DIR_PAD_SIZE + Util.DIR_PAD_OFFSET);
+
+        for (int i = 0; i < 4; i++) stage.addActor(magLabels[i]);
+    }
+
+    /**
+     * Handles player movement commands
+     */
+    private void handleDirPadEvents() {
+        for (int i = 0; i < 4; i++) {
+            final int index = i;
+            dirPad[i].addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    movePlayer(index);
+                }
+            });
+        }
+    }
+
+    private void movePlayer(int dir) {
+        if (player.canMove()) {
+            player.move(dir, mags[dir]);
+            player.getAm().setAnimation(dir);
+            shuffleMagnitudes();
+            updateMagLabels();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

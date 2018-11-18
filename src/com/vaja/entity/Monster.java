@@ -12,24 +12,25 @@ import com.vaja.resource.ResourceManage;
  */
 
 public class Monster extends Entity {
-    //exp is give when defeated monster
+
+    // amount of exp an Enemy will give when defeated
     protected int expDrop;
-    //coin is give when defeated monster
-    protected int coinDrop;
+    // amount of gold an Enemy will drop
+    protected int goldDrop;
 
     public Monster(String id, Vector2 position, TileMap tileMap, ResourceManage rm) {
         super(id, position, tileMap, rm);
-        
+
         speed = 0;
     }
 
-	public int getExpDrop() {
-		return expDrop;
-	}
+    public int getExpDrop() {
+        return expDrop;
+    }
 
-	public int getCoinDrop() {
-		return coinDrop;
-	}
-    
-    
+    public int getGoldDrop() {
+        return goldDrop;
+    }
+
 }
+

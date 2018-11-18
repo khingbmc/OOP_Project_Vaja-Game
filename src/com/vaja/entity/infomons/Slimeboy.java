@@ -14,10 +14,9 @@ import com.vaja.resource.ResourceManage;
 
 public class Slimeboy extends Monster {
 
-	public Slimeboy(String id, Vector2 position, TileMap tileMap, ResourceManage rm) {
-		super(id, position, tileMap, rm);
-		
-		am = new AnimationManage(rm.sprites16x16, 2, 2, 1/3f);
-	}
-	
+    public Slimeboy(String id, Vector2 position, TileMap tileMap, ResourceManage rm) {
+        super(id, position, tileMap, rm);
+
+        am = new AnimationManage(rm.sprites16x16, 2, 2, 1 / 3f);
+    }
 }
